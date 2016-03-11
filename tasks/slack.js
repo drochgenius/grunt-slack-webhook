@@ -3,6 +3,19 @@ var request = require('superagent');
 
 module.exports = function (grunt) {
 
+    function parseAttachments(data){
+        var attachments;
+
+        if (data.attachments){
+            attachments = data.attachments;
+            if (attachments.text){
+                attachments.text.replace('{{message}}', message);
+            }
+        }
+
+        return attachments;
+    }
+
     grunt.registerMultiTask('slack', 'Push info to slack', function () {
         var options = this.options(),
             invalids = [];
@@ -24,7 +37,8 @@ module.exports = function (grunt) {
             url = options.webhook,
             data = {
                 channel: options.channel,
-                text: this.data.text.replace('{{message}}', message)
+                text: this.data.text ? this.data.text.replace('{{message}}', message) : '',
+                attachments: parseAttachments(this.data)
             };
 
         if (options.username) {
