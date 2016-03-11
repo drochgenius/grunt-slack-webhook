@@ -8,8 +8,8 @@ module.exports = function(grunt) {
 
         if (data.attachments) {
 
-            title = grunt.option('title') || '',
-            content = grunt.option('content') || '',
+            var title = grunt.option('title') || '';
+            var content = grunt.option('content') || '';
 
             attachments = data.attachments;
             if (attachments.title) {
