@@ -3,20 +3,25 @@ var request = require('superagent');
 
 module.exports = function(grunt) {
 
-    function parseAttachments(data, title, content) {
+    function parseAttachments(data) {
         var attachments;
 
         if (data.attachments && data.attachments.length > 0) {
-            attachments = data.attachments[0];
 
-            console.log(data);
-            console.log(attachments);
+            var title = grunt.option('title') || '';
+            var content = grunt.option('content') || '';
+            var color = grunt.option('color') || '';
+
+            attachments = data.attachments[0];
 
             if (attachments.title) {
                 attachments.title = attachments.title.replace('{{title}}', title);
             }
             if (attachments.text) {
                 attachments.text = attachments.text.replace('{{content}}', content);
+            }
+            if (attachments.color) {
+                attachments.color = attachments.color.replace('{{color}}', color);
             }
         }
 
@@ -41,13 +46,11 @@ module.exports = function(grunt) {
         // We are good to go
         var done = this.async(),
             message = grunt.option('message') || '',
-            title = grunt.option('title') || '',
-            content = grunt.option('content') || '',
             url = options.webhook,
             data = {
                 channel: options.channel,
                 text: this.data.text ? this.data.text.replace('{{message}}', message) : '',
-                attachments: parseAttachments(this.data, title, content)
+                attachments: parseAttachments(this.data)
             };
 
         if (options.username) {
