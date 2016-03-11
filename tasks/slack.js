@@ -13,10 +13,10 @@ module.exports = function(grunt) {
 
             attachments = data.attachments;
             if (attachments.title) {
-                attachments.title.replace('{{title}}', title);
+                attachments.title = data.attachments.title.replace('{{title}}', title);
             }
             if (attachments.text) {
-                attachments.text.replace('{{content}}', content);
+                attachments.text = data.attachments.text.replace('{{content}}', content);
             }
         }
 

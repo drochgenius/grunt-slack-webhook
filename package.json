@@ -1,7 +1,7 @@
 {
     "name": "grunt-slack-webhook",
     "description": "Grunt plugin that can push messages to slack.com service using web hooks.",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "homepage": "https://github.com/kriskbx/grunt-slack-webhook",
     "author": {
         "name": "Kris Siepert",
