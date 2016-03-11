@@ -1,22 +1,29 @@
 /* jshint node:true */
 var request = require('superagent');
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 
-    function parseAttachments(data){
+    function parseAttachments(data) {
         var attachments;
 
-        if (data.attachments){
+        if (data.attachments) {
+
+            title = grunt.option('title') || '',
+            content = grunt.option('content') || '',
+
             attachments = data.attachments;
-            if (attachments.text){
-                attachments.text.replace('{{message}}', message);
+            if (attachments.title) {
+                attachments.title.replace('{{title}}', title);
+            }
+            if (attachments.text) {
+                attachments.text.replace('{{content}}', content);
             }
         }
 
         return attachments;
     }
 
-    grunt.registerMultiTask('slack', 'Push info to slack', function () {
+    grunt.registerMultiTask('slack', 'Push info to slack', function() {
         var options = this.options(),
             invalids = [];
 
@@ -51,14 +58,14 @@ module.exports = function (grunt) {
             data.icon_url = options.icon_url;
         }
 
-        request.post(url).type('form').send('payload=' + JSON.stringify(data)).end(function (res) {
+        request.post(url).type('form').send('payload=' + JSON.stringify(data)).end(function(res) {
             if (!res.ok) {
                 grunt.log.error('Error sending message to slack: ', res.text);
                 return done(false);
             }
             grunt.log.writeln('Message sent to slack successfully!');
             done();
-        }).on('error', function (err) { // Handling network error
+        }).on('error', function(err) { // Handling network error
             grunt.log.error('Error sending message to slack: ', err.message);
             done(false);
         });
