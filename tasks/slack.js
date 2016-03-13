@@ -3,31 +3,6 @@ var request = require('superagent');
 
 module.exports = function(grunt) {
 
-    function parseAttachments(data) {
-        var attachments;
-
-        if (data.attachments && data.attachments.length > 0) {
-
-            var title = grunt.option('title') || '';
-            var content = grunt.option('content') || '';
-            var color = grunt.option('color') || '';
-
-            attachments = data.attachments[0];
-
-            if (attachments.title) {
-                attachments.title = attachments.title.replace('{{title}}', title);
-            }
-            if (attachments.text) {
-                attachments.text = attachments.text.replace('{{content}}', content);
-            }
-            if (attachments.color) {
-                attachments.color = attachments.color.replace('{{color}}', color);
-            }
-        }
-
-        return [attachments];
-    }
-
     grunt.registerMultiTask('slack', 'Push info to slack', function() {
         var options = this.options(),
             invalids = [];
@@ -47,11 +22,7 @@ module.exports = function(grunt) {
         var done = this.async(),
             message = grunt.option('message') || '',
             url = options.webhook,
-            data = {
-                channel: options.channel,
-                text: this.data.text ? this.data.text.replace('{{message}}', message) : '',
-                attachments: parseAttachments(this.data)
-            };
+            data = typeof this.data === 'function' ? this.data() : this.data;
 
         if (options.username) {
             data.username = options.username;
